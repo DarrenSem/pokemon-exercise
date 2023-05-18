@@ -4,13 +4,14 @@ console.time("READY");
 
 ( (glo) => {
 
-	const isDev = /[?&]dev\b/i.test(location.search);
-	const usePreact = /[?&]preact\b/i.test(location.search);
-	const useLiveReload = /[?&]live\b/i.test(location.search);
-	const useCDNnotLCL = /[?&]cdn\b/i.test(location.search);
+	const L = location;
+	const isDev = /[?&]dev\b/i.test(L.search);
+	const usePreact = /[?&]preact\b/i.test(L.search);
+	const useLiveReload = /[?&]live\b/i.test(L.search);
+	const useCDNnotLCL = /[?&]cdn\b/i.test(L.search);
 
 	let delim = " ";
-	let CDN = "../CDN%20saved%20to%20LCL";
+	let CDN = `${L.hostname.match(/\bgithub/) ? "" : "../../"}../CDN%20saved%20to%20LCL`;
 	let RVER = "@18.2.0";	// React
 	let PVER = "@10.14.1";	// Preact
 

@@ -147,22 +147,16 @@ const PokedexTable = (props) => {
 	);
 
 // debugger;
-	const matching = selectedType.trim().length
-	? pokedex.filter(
-		pokemon => pokemon.types.includes(selectedType)
-	)
-	: [...pokedex];
+	// const matching = selectedType.trim().length
+	// ? pokedex.filter(
+	// 	pokemon => pokemon.types.includes(selectedType)
+	// )
+	// : [...pokedex];
 
-	const body = matching.map( pokemon => {
+	const body = pokedex.map( pokemon => {
 // debugger;
 // console.warn(props);
-		const row = h(
-			PokemonRow,
-			{
-				key: _id ++,
-				pokemon,
-			}
-		);
+		const row = PokemonRow( { key: _id ++, pokemon } );
 
 		return row;
 
@@ -238,13 +232,11 @@ const pokemonArray = [
 // ...create a <FilterablePokedexTable /> component that renders both the <PokemonTypeSelection /> component and <PokedexTable />
 // Make sure you only display Pokemon with the selected type!
 
-const handleSelectChange = (evt, selectType) => {
-	// debugger;
-	const {value} = evt.target;	// AKA const {value} = el.target[el.target.selectedIndex]
-
-	selectType(value);	// TODO: confirm, is this all I need???
-
-};
+// const handleSelectChange = (evt, selectType) => {
+// 	// debugger;
+// 	const {value} = evt.target;	// AKA const {value} = el.target[el.target.selectedIndex]
+// 	selectType(value);
+// };
 
 const PokemonTypeSelection = ({pokedex, selectType, selectedType}) => {
 
@@ -272,7 +264,11 @@ const PokemonTypeSelection = ({pokedex, selectType, selectedType}) => {
 					{
 						key: _id ++,
 						id: "filter-pokemon-type",
-						onChange: (evt) => handleSelectChange(evt, selectType),
+						onChange: evt => {
+							const {value} = evt.target;
+							// AKA old way: const {value} = el.target[el.target.selectedIndex]
+							selectType(value);
+						},
 					},
 					options
 				),
@@ -292,7 +288,7 @@ const PokemonTypeSelection = ({pokedex, selectType, selectedType}) => {
 };
 
 const getStartingType = () => {
-	// TODO: later maybe pull from localStorage as a test
+	// later might even pull from localStorage as logic test of "set selection during page initial load" 
 	// return "-faked-";
 	// return "grass";
 	// return "poison";
@@ -302,6 +298,12 @@ const getStartingType = () => {
 const FilterablePokedexTable = ( {pokedex} ) => {
 
 	const [selectedType, selectType] = useState(getStartingType);
+
+	const pokedexFiltered = selectedType.trim().length
+	? pokedex.filter(
+		pokemon => pokemon.types.includes(selectedType)
+	)
+	: [...pokedex];
 
 	return (
 		h(
@@ -321,7 +323,7 @@ const FilterablePokedexTable = ( {pokedex} ) => {
 					PokedexTable,
 					{
 						key: _id ++,
-						pokedex,
+						pokedex: pokedexFiltered,
 						selectedType
 					},
 				)

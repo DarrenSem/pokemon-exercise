@@ -55,43 +55,6 @@ const PokemonRow = (props) => {
 		] ),
 	]);
 };
-// const PokemonRow_NON_TABLE = (props) => {
-// 	const {pokemon} = props;
-// 	const {id, name, types, sprite} = pokemon;
-//
-// 	return h(Fragment, null, [
-// 		h(
-// 			"img",
-// 			{
-// 				key: _id ++,
-// 				src: sprite,
-// 				alt: name,
-// 				width: "10%"
-// 			}
-// 		),
-// 		h(
-// 			"b",
-// 			{ key: _id ++ },
-// 			`${name}`),
-// 		h(
-// 			"code",
-// 			{ key: _id ++ },
-// 			` (#${String(id).padStart(3, "0")}) `),
-// 		h(
-// 			"span",
-// 			{ key: _id ++ },
-// 			[
-// 				`Type: `,
-// 				h(
-// 					"i",
-// 					{ key: _id ++ },
-// 				 	types.join(", ")
-// 				)
-// 			]
-// 		),
-// 	]);
-// };
-// export default PokemonRow;
 
 
 

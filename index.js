@@ -10,7 +10,7 @@ console.time("READY");
 	const useCDNnotLCL = /[?&]cdn\b/i.test(location.search);
 
 	let delim = " ";
-	let CDN = "./CDN%20saved%20to%20LCL";
+	let CDN = "../CDN%20saved%20to%20LCL";
 	let RVER = "@18.2.0";	// React
 	let PVER = "@10.14.1";	// Preact
 

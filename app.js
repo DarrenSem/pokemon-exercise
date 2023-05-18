@@ -49,7 +49,7 @@ const PokemonRow = (props) => {
 			`Type: `,
 			h(
 				"i",
-				{},
+				{ key: _id ++ },
 			 	types.join(", ")
 			)
 		] ),
@@ -100,7 +100,10 @@ const PokemonRow = (props) => {
 const PokedexTable = (props) => {
 // debugger;
 // console.warn(props);
-	const {pokedex} = props;
+	const {
+		pokedex,
+		selectedType,
+	} = props;
 
 	const headTag = false ? "th" : "td";
 
@@ -143,10 +146,23 @@ const PokedexTable = (props) => {
 		]
 	);
 
-	const body = pokedex.map( pokemon => {
+// debugger;
+	const matching = selectedType.trim().length
+	? pokedex.filter(
+		pokemon => pokemon.types.includes(selectedType)
+	)
+	: [...pokedex];
+
+	const body = matching.map( pokemon => {
 // debugger;
 // console.warn(props);
-		const row = PokemonRow( { pokemon } );
+		const row = h(
+			PokemonRow,
+			{
+				key: _id ++,
+				pokemon,
+			}
+		);
 
 		return row;
 
@@ -156,8 +172,16 @@ const PokedexTable = (props) => {
 		"table",
 		{},
 		[
-			head,
-			body,
+			h(
+				"thead",
+				{ key: _id ++ },
+				head,
+			),
+			h(
+				"tbody",
+				{ key: _id ++ },
+				body,
+			),
 		]
 	);
 
@@ -174,7 +198,7 @@ const pokemonArray = [
 	{
 		id: 1,
 		name: "Bulbasaur",
-		types: ["grass", "poison"],
+		types: ["grass"],
 		// sprite: "https://pokemon.com/pictures/bulbasaur.png"
 		// https://www.pokemon.com/us/pokedex/bulbasaur => https://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png
 		sprite: "../img/001.png"
@@ -182,7 +206,7 @@ const pokemonArray = [
 	{
 		id: 2,
 		name: "Ivysaur",
-		types: ["grass", "poison"],
+		types: ["poison"],
 		// sprite: "https://pokemon.com/pictures/ivysaur.png"
 		// https://www.pokemon.com/us/pokedex/ivysaur => https://assets.pokemon.com/assets/cms2/img/pokedex/full/002.png
 		sprite: "../img/002.png"
@@ -195,18 +219,125 @@ const pokemonArray = [
 		// https://www.pokemon.com/us/pokedex/venusaur => https://assets.pokemon.com/assets/cms2/img/pokedex/full/003.png
 		sprite: "../img/003.png"
 	},
-
- 
-
+	{
+		id: 4,
+		name: "Charmander ",
+		types: ["fire"],
+		// sprite: "https://pokemon.com/pictures/charmander.png"
+		// https://www.pokemon.com/us/pokedex/charmander => https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png
+		sprite: "../img/004.png"
+	},
 ];
 // create a `<PokedexTable />` component that takes in the array and renders all the pokemon in that array.
+
+// Provided a <PokemonTypeSelection /> component with the following props
+// type PokemonTypeSelectionProps = {
+// 	selectedType: string | undefined;
+// 	selectType: (type: string | undefined) => void;
+// }
+// ...create a <FilterablePokedexTable /> component that renders both the <PokemonTypeSelection /> component and <PokedexTable />
+// Make sure you only display Pokemon with the selected type!
+
+const handleSelectChange = (evt, selectType) => {
+	// debugger;
+	const {value} = evt.target;	// AKA const {value} = el.target[el.target.selectedIndex]
+
+	selectType(value);	// TODO: confirm, is this all I need???
+
+};
+
+const PokemonTypeSelection = ({pokedex, selectType, selectedType}) => {
+
+	const typesAll = [];
+	pokedex.forEach( pokemon => typesAll.push(...pokemon.types) );
+
+	const options = ["", "-all-", ...new Set(typesAll), "[fakevalue aka -none-]"]
+	// ^ "looks better" than this: const options = ["-all-", "[fakevalue aka -none-]", ...new Set(typesAll)]
+	.map( (opt, i) => h(
+		"option",
+		{
+			key: _id ++,
+			value: opt === "-all-" ? "" : opt,
+		},
+		opt
+	) );
+
+	return (
+		h(
+			"div",
+			{},
+			[
+				h(
+					"select",
+					{
+						key: _id ++,
+						id: "filter-pokemon-type",
+						onChange: (evt) => handleSelectChange(evt, selectType),
+					},
+					options
+				),
+				h(
+					"label",
+					{
+						key: _id ++,
+						htmlFor: "filter-pokemon-type",
+						title: `Show only this Type${selectedType ? `: ${selectedType}` : ""}`
+					},
+					`🔍${selectedType ? `${selectedType}` : ""}`
+				),
+			]
+		)
+	);
+
+};
+
+const getStartingType = () => {
+	// TODO: later maybe pull from localStorage as a test
+	// return "-faked-";
+	// return "grass";
+	// return "poison";
+	return "";
+};
+
+const FilterablePokedexTable = ( {pokedex} ) => {
+
+	const [selectedType, selectType] = useState(getStartingType);
+
+	return (
+		h(
+			Fragment,
+			{},
+			[
+				h(
+					PokemonTypeSelection,
+					{
+						key: _id ++,
+						pokedex,
+						selectType,
+						selectedType,
+					},
+				),
+				h(
+					PokedexTable,
+					{
+						key: _id ++,
+						pokedex,
+						selectedType
+					},
+				)
+
+			]
+		)
+	);
+};
 
 const App = () => {
 	return (
 		h(
 			"div",
 			{},
-			h( PokedexTable, { pokedex: pokemonArray } )
+			// h( PokedexTable, { pokedex: pokemonArray } )
+			h( FilterablePokedexTable, { pokedex: pokemonArray } )
 		)
 	);
 };

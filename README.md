@@ -1,6 +1,7 @@
 # pokemon-exercise
 Trying the example "Pokedex Problem" that Theo (of Ping.gg) says he gives candidates for Junior React Developer role.
 (To more easily confirm somebody "knows their stuff" in React, rather than typical algorithm-memorization technical interviews.)
+###### LATER retried using JSX and Vite (config to make build work properly was *quite a challenge*) @ https://github.com/DarrenSem/pokemon-exercise-vite
 
 # Inspiration
 https://t3-tools.notion.site/Pokedex-Problem-90f9dcfff10d4418a6fad44581b1ecff
